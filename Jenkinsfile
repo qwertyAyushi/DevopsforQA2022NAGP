@@ -18,4 +18,13 @@ pipeline {
             }
         }
     }
+    
+    post{
+        always{
+            //Execute evry time
+        }
+        success{
+            echo 'Hello success'
+        }
+    }
 }
