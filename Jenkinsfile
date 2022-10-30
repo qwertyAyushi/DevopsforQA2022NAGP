@@ -1,20 +1,21 @@
-pipeline{
+pipeline {
     agent any
-    stages{
-       stage("code checkout"){
-           steps{
-        sh "echo hello"
-           }
-    } 
-    stage("code build"){
-           steps{
-        sh "echo build"
-           }
-    } 
-    stage("unit test"){
-           steps{
-        sh "unit test"
-           }
-    } 
+
+    stages {
+        stage('code checkout') {
+            steps {
+                echo 'Hello code checkout'
+            }
+        }
+        stage('code build') {
+            steps {
+                echo 'Hello code build'
+            }
+        }
+        stage('unit test') {
+            steps {
+                echo 'Hello unit test'
+            }
+        }
     }
 }
