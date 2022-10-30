@@ -21,7 +21,7 @@ pipeline {
     
     post{
         always{
-            //Execute evry time
+            echo 'Hello always'
         }
         success{
             echo 'Hello success'
