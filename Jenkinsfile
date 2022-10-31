@@ -1,40 +1,63 @@
-pipeline {
+pipeline{
     agent any
+    	environment {
+		notifyEmail ="ayushi.gupta@nagarro.com"
+	}
     tools{
         maven 'Maven'
     }
-
-    stages {
-        stage('checkout') {
-            steps {
-                checkout scm
+    stages{
+        stage("code checkout"){
+            steps{
+            bat "echo hello"
+            }
+        }   
+        stage("code build"){
+            steps{
+            bat "mvn clean"
             }
         }
-        stage('Build') {           
-            steps {
-                echo 'mvn install'
+        stage("unit test"){
+            steps{
+            bat "mvn test"
             }
         }
-        stage('Unit testing') {
-            steps {
-                echo 'mvn test'
-            }
-        }
-        stage('Sonar Analysis') {
-            steps {
-                withSonarQubeEnv('Test_Sonar'){
-                echo 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar'
+        stage("Sonar Analysis"){
+            steps{
+            withSonarQubeEnv("Test_SonarQube")
+                {
+		    bat "echo Sonar Run half"
+                        bat "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.8.0.2131:sonar"        
                 }
             }
         }
+        stage("Publish to Artifactory"){
+            steps{
+                rtMavenDeployer(
+                    id: 'deployer',
+                    serverId: 'Ayushi_Artifactory',
+                    releaseRepo: 'Ayushi_Artifactory',
+                    snapshotRepo: 'Ayushi_Artifactory'
+                )
+                rtMavenRun(
+                    pom: 'pom.xml',
+                    goals: 'clean install',
+                    deployerId: 'deployer'
+                    )
+                rtPublishBuildInfo(
+                    serverId:'Ayushi_Artifactory',
+                )
+            }        
+        }
+        stage("Invoke UI Test Pipeline"){
+			steps{
+				build job: 'Dev-Ops-Freestyle-Practice'
+			}
+		}
     }
-    
     post{
-        always{
-            echo 'Hello always'
-        }
         success{
-            echo 'Hello success'
+            bat "echo success"
+            }
         }
-    }
 }
