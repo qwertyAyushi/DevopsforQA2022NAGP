@@ -35,9 +35,9 @@ pipeline{
             steps{
                 rtMavenDeployer(
                     id: 'deployer',
-                    serverId: 'Ayushi_Artifactory',
-                    releaseRepo: 'Ayushi_Artifactory',
-                    snapshotRepo: 'Ayushi_Artifactory'
+                    serverId: 'qwertyAyushi',
+                    releaseRepo: 'jfrog-ayushi-key',
+                    snapshotRepo: 'jfrog-ayushi-key'
                 )
                 rtMavenRun(
                     pom: 'pom.xml',
@@ -45,7 +45,7 @@ pipeline{
                     deployerId: 'deployer'
                     )
                 rtPublishBuildInfo(
-                    serverId:'Ayushi_Artifactory',
+                    serverId:'qwertyAyushi',
                 )
             }        
         }
